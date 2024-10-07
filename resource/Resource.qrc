@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/send.png</file>
+        <file>rect.qml</file>
+    </qresource>
+    <qresource prefix="/QML"/>
+</RCC>
