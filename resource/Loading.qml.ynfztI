@@ -1,0 +1,12 @@
+//import QtQuick 2.15
+import QtQuick.Controls 2.15
+
+BusyIndicator {
+    id: busyIndicator
+    width: parent.width
+    height: parent.height
+    visible: True
+    running: True
+}
+
+

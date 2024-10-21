@@ -18,7 +18,7 @@ file(GLOB SRC_FILES
     ${CMAKE_SOURCE_DIR}/forms/*.ui
     ${CMAKE_SOURCE_DIR}/forms/*.h
     ${CMAKE_SOURCE_DIR}/forms/*.cpp
-    ${CMAKE_SOURCE_DIR}/resurce/*.qrc
+    ${CMAKE_SOURCE_DIR}/resource/*.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

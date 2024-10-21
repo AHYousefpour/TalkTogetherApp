@@ -26,7 +26,6 @@ TalkTogether::TalkTogether(QString name, QWidget *parent)
 
 TalkTogether::~TalkTogether()
 {
-    delete session;
     delete messageDisplayer;
     delete talkTogether;
 }
@@ -35,8 +34,8 @@ TalkTogether* TalkTogether::getInctanse(QHostAddress address, quint16 port, QStr
 {
     if(talkTogether == nullptr)
     {
-        session = new Session(address, port, name);
         talkTogether = new TalkTogether(name);
+        session = Session::getInctanse(address, port, name);
     }
 
     return talkTogether;

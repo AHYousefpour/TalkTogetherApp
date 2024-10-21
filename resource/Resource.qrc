@@ -2,6 +2,8 @@
     <qresource prefix="/">
         <file>icons/send.png</file>
         <file>rect.qml</file>
+        <file>Loading.qml</file>
+        <file>icons/error.png</file>
     </qresource>
     <qresource prefix="/QML"/>
 </RCC>

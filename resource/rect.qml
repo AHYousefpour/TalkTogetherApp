@@ -1,8 +1,8 @@
 import QtQuick 2.15
 
 Rectangle {
-    width: parent.width;
-    height: parent.height;
+    width: 800;
+    height: 600;
     gradient: Gradient {
         orientation: Gradient.Vertical
         GradientStop {

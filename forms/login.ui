@@ -25,11 +25,11 @@
   <property name="windowTitle">
    <string>Login</string>
   </property>
-  <widget class="QQuickWidget" name="quickWidget">
+  <widget class="QQuickWidget" name="backgroundWidget">
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>0</y>
+     <y>10</y>
      <width>801</width>
      <height>601</height>
     </rect>
@@ -224,6 +224,19 @@
         </property>
        </widget>
       </item>
+      <item row="5" column="0" colspan="2">
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
       <item row="6" column="0" colspan="2">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <property name="leftMargin">
@@ -305,19 +318,6 @@ QPushButton:hover {
         </item>
        </layout>
       </item>
-      <item row="5" column="0" colspan="2">
-       <spacer name="verticalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
      </layout>
     </item>
     <item>
@@ -335,6 +335,90 @@ QPushButton:hover {
     </item>
    </layout>
   </widget>
+  <widget class="QQuickWidget" name="loadingWidget">
+   <property name="geometry">
+    <rect>
+     <x>368</x>
+     <y>168</y>
+     <width>64</width>
+     <height>64</height>
+    </rect>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>64</width>
+     <height>100</height>
+    </size>
+   </property>
+   <property name="resizeMode">
+    <enum>QQuickWidget::SizeRootObjectToView</enum>
+   </property>
+   <property name="source">
+    <url>
+     <string>qrc:/Loading.qml</string>
+    </url>
+   </property>
+  </widget>
+  <widget class="QLabel" name="connectingLable">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>290</y>
+     <width>300</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="errorIcon">
+   <property name="geometry">
+    <rect>
+     <x>284</x>
+     <y>364</y>
+     <width>48</width>
+     <height>48</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../resource/Resource.qrc">:/icons/error.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="errorText">
+   <property name="geometry">
+    <rect>
+     <x>331</x>
+     <y>380</y>
+     <width>191</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: &quot;red&quot;</string>
+   </property>
+   <property name="text">
+    <string>Can not connect to the server!</string>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -343,6 +427,8 @@ QPushButton:hover {
    <header location="global">QtQuickWidgets/QQuickWidget</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../resource/Resource.qrc"/>
+ </resources>
  <connections/>
 </ui>

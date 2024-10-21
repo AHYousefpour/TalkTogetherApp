@@ -18,9 +18,14 @@ public:
 private slots:
     void startUpApp();
     void connectToServer();
+    void ChangeStateToErrorConnection();
 
 private:
     Ui::Login *ui;
+    class Connection* connection;
+    void changeStateToConnecting(const bool visible);
+    void showError(const bool show);
+    void setRegexToInputs();
 };
 
 #endif // LOGIN_H
