@@ -29,9 +29,9 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>10</y>
-     <width>801</width>
-     <height>601</height>
+     <y>0</y>
+     <width>800</width>
+     <height>600</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -279,7 +279,7 @@
            <string notr="true">QPushButton {
 border: 1px solid rgb(24, 103, 155);
 border-radius: 8px;
-background-color: rgb(124, 203, 255);
+background-color: &quot;#4477CE&quot;;
 color: white;
 width: 200px;
 height: 30px
@@ -384,8 +384,8 @@ QPushButton:hover {
   <widget class="QLabel" name="errorIcon">
    <property name="geometry">
     <rect>
-     <x>284</x>
-     <y>364</y>
+     <x>10</x>
+     <y>550</y>
      <width>48</width>
      <height>48</height>
     </rect>
@@ -400,9 +400,9 @@ QPushButton:hover {
   <widget class="QLabel" name="errorText">
    <property name="geometry">
     <rect>
-     <x>331</x>
-     <y>380</y>
-     <width>191</width>
+     <x>53</x>
+     <y>567</y>
+     <width>500</width>
      <height>16</height>
     </rect>
    </property>

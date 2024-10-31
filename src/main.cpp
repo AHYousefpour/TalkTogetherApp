@@ -1,7 +1,5 @@
 #include "login.h"
 #include <QApplication>
-#include <QTextStream>
-#include <QList>
 
 int main(int argc, char *argv[])
 {

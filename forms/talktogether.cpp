@@ -30,12 +30,12 @@ TalkTogether::~TalkTogether()
     delete talkTogether;
 }
 
-TalkTogether* TalkTogether::getInctanse(QHostAddress address, quint16 port, QString name)
+TalkTogether* TalkTogether::getInctanse(QString name)
 {
     if(talkTogether == nullptr)
     {
-        talkTogether = new TalkTogether(name);
-        session = Session::getInctanse(address, port, name);
+        session = Session::getInctanse();
+        talkTogether = new TalkTogether(name); 
     }
 
     return talkTogether;
@@ -94,5 +94,6 @@ bool TalkTogether::isJustSpace(QString msg)
 void TalkTogether::on_disconnectBtn_clicked()
 {
     session->disconnect();
+    this->~TalkTogether();
 }
 

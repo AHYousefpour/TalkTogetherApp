@@ -1,6 +1,7 @@
 #ifndef LOGIN_H
 #define LOGIN_H
 
+#include "ui_login.h"
 #include <QWidget>
 
 namespace Ui {
@@ -18,14 +19,14 @@ public:
 private slots:
     void startUpApp();
     void connectToServer();
-    void ChangeStateToErrorConnection();
+    void ChangeStateToErrorConnection(QString error);
 
 private:
     Ui::Login *ui;
     class Connection* connection;
-    void changeStateToConnecting(const bool visible);
     void showError(const bool show);
     void setRegexToInputs();
+    void changeStateToConnecting(const bool value);
 };
 
 #endif // LOGIN_H

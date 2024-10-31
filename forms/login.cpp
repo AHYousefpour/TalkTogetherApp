@@ -1,7 +1,6 @@
 #include "login.h"
 #include "ui_login.h"
 #include "talkTogether.h"
-#include "connection.h"
 #include <QObject>
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
@@ -26,24 +25,9 @@ Login::~Login()
 
 void Login::startUpApp()
 {
-    QHostAddress address(ui->inputIPAddress->text());
-    quint16 port = ui->inputPort->text().toUInt();
-    TalkTogether* talkTogether = TalkTogether::getInctanse(address, port, ui->inputName->text());
+    TalkTogether* talkTogether = TalkTogether::getInctanse(ui->inputName->text());
 
     this->~Login();
-}
-
-void Login::changeStateToConnecting(const bool value)
-{
-    ui->backgroundWidget->setVisible(!value);
-    ui->inputIPAddress->setVisible(!value);
-    ui->inputName->setVisible(!value);
-    ui->inputPort->setVisible(!value);
-    ui->connectBtn->setVisible(!value);
-    ui->loadingWidget->setVisible(value);
-    ui->connectingLable->setVisible(value);
-    ui->label->setStyleSheet(value ? "color: black" : "color: white");
-    this->repaint();
 }
 
 void Login::showError(const bool show)
@@ -73,20 +57,37 @@ void Login::connectToServer()
     changeStateToConnecting(true);
     showError(false);
 
-    QHostAddress address(ui->inputIPAddress->text());
+    QString address = ui->inputIPAddress->text();
     quint16 port = ui->inputPort->text().toUInt();
+    QString name = ui->inputName->text();
 
-    connection = new Connection(address, port, ui->inputName->text());
+    Session* session = Session::getInctanse(address, port, name);
+    session->connectToServer();
 
-    QObject::connect(connection, &Connection::startUp, this, &Login::startUpApp);
-    QObject::connect(connection, &Connection::changeStateToErrorConnection, this, &Login::ChangeStateToErrorConnection);
-
-    connection->start();
+    QObject::connect(session, &Session::connecting, this, &Login::changeStateToConnecting);
+    QObject::connect(session, &Session::connected, this, &Login::startUpApp);
+    QObject::connect(session, &Session::errorOccurred, this, &Login::ChangeStateToErrorConnection);
 }
 
-void Login::ChangeStateToErrorConnection()
+void Login::ChangeStateToErrorConnection(QString error)
 {
     changeStateToConnecting(false);
     showError(true);
+    ui->errorText->setText(error);
 }
+
+void Login::changeStateToConnecting(const bool value)
+{
+    ui->backgroundWidget->setVisible(!value);
+    ui->inputIPAddress->setVisible(!value);
+    ui->inputName->setVisible(!value);
+    ui->inputPort->setVisible(!value);
+    ui->connectBtn->setVisible(!value);
+    ui->loadingWidget->setVisible(value);
+    ui->connectingLable->setVisible(value);
+    ui->label->setStyleSheet(value ? "color: black" : "color: white");
+
+    this->repaint();
+}
+
 

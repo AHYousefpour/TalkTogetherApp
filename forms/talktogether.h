@@ -3,7 +3,6 @@
 
 #include <QHostAddress>
 #include <QMainWindow>
-#include <QThread>
 #include "session.h"
 #include "messageDisplayer.h"
 
@@ -16,7 +15,7 @@ class TalkTogether : public QMainWindow
     Q_OBJECT
 
 public:
-    static TalkTogether* getInctanse(QHostAddress address, quint16 port, QString name);
+    static TalkTogether* getInctanse(QString name);
 
 private slots:
     void on_sendMsgBtn_clicked();
@@ -36,7 +35,6 @@ private:
     static TalkTogether* talkTogether;
     static Session* session;
     MessageDisplayer* messageDisplayer;
-    QThread* sessionThread;
     QString name;
 };
 #endif // TALKTOGETHER_H

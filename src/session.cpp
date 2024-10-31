@@ -1,25 +1,27 @@
 #include "session.h"
 #include <QJsonDocument>
-#include <QEventLoop>
 #include "messageType.h"
-#include <QThread>
 
 Session* Session::session = nullptr;
-void prepareDataForSending(QByteArray& buffer);
 
-Session::Session(QHostAddress address, quint16 port, QString name)
-    : address(address), port(port), name(name)
+Session::Session(QString address, quint16 port, QString name)
+    : m_address(address), m_port(port), m_name(name)
 {
-    QObject::connect(&clientSocket, &QTcpSocket::connected, this, &Session::connect);
-    QObject::connect(&clientSocket, &QTcpSocket::readyRead, this, &Session::recvMessage);
+    clientSocket = new QTcpSocket(this);
+
+    QObject::connect(clientSocket, &QTcpSocket::connected, this, &Session::sendInfo);
+    QObject::connect(clientSocket, &QTcpSocket::readyRead, this, &Session::recvMessage);
+    QObject::connect(clientSocket, &QTcpSocket::stateChanged, this, &Session::handleState);
+    QObject::connect(clientSocket, &QTcpSocket::errorOccurred, this, &Session::handleError);
 }
 
 Session::~Session()
 {
+    delete clientSocket;
     delete session;
 }
 
-Session *Session::getInctanse(QHostAddress address, quint16 port, QString name)
+Session *Session::getInctanse(QString address, quint16 port, QString name)
 {
     if(session == nullptr)
     {
@@ -29,29 +31,37 @@ Session *Session::getInctanse(QHostAddress address, quint16 port, QString name)
     return session;
 }
 
+Session *Session::getInctanse()
+{
+    return session;
+}
+
 void Session::connectToServer()
 {
-    QThread::currentThread()->msleep(3000);
-    clientSocket.connectToHost(address, port, QTcpSocket::ReadWrite);
+    clientSocket->connectToHost(session->address(), session->port());
+}
 
+void Session::sendInfo()
+{
     QJsonObject json;
     json.insert("type", NewConnection);
     json.insert("time", QTime::currentTime().toString());
-    json.insert("name", name);
+    json.insert("name", m_name);
 
     sendMessage(json);
-
-    emit changedStatus(isConnect);
 }
 
 void Session::disconnect()
 {
     QJsonObject json;
     json.insert("type", MessageType::Disconnect);
+    json.insert("time", QTime::currentTime().toString());
+    json.insert("name", m_name);
 
     sendMessage(json);
 
-    clientSocket.close();
+    clientSocket->close();
+    this->~Session();
 }
 
 void Session::sendMessage(QJsonObject json)
@@ -59,39 +69,16 @@ void Session::sendMessage(QJsonObject json)
     QJsonDocument jdoc(json);
     QByteArray buffer = jdoc.toJson();
 
-    //prepareDataForSending(buffer);
-
     int size = buffer.length();
     std::string len = std::to_string(size);
 
-    clientSocket.write(len.c_str(), sizeof(char*));
-    clientSocket.write(buffer);
-}
-
-void prepareDataForSending(QByteArray& buffer)
-{
-    QList<QString> list;
-    QTextStream text(buffer);
-    QString line;
-
-    while(text.readLineInto(&line))
-    {
-        list.append(line);
-    }
-
-    buffer.clear();
-    QList<QString>::reverse_iterator iter = list.rbegin();
-    while(iter != list.rend())
-    {
-        QString temp = *iter;
-        buffer.append(temp.toStdString().c_str());
-        iter++;
-    }
+    clientSocket->write(len.c_str(), sizeof(char*));
+    clientSocket->write(buffer);
 }
 
 void Session::recvMessage()
 {
-    QByteArray buffer = clientSocket.readAll();
+    QByteArray buffer = clientSocket->readAll();
 
     QJsonDocument jdoc = QJsonDocument::fromJson(buffer);
 
@@ -100,8 +87,26 @@ void Session::recvMessage()
     emit message(json);
 }
 
-void Session::connect()
+void Session::handleState(QAbstractSocket::SocketState state)
 {
-    isConnect = true;
+    switch (state) {
+    case QAbstractSocket::ConnectingState: emit connecting(true); break;
+    case QAbstractSocket::ConnectedState: emit connected(); break;
+    default:
+        break;
+    }
 }
+
+void Session::handleError(QAbstractSocket::SocketError error)
+{
+    switch(error)
+    {
+    case QAbstractSocket::ConnectionRefusedError: emit errorOccurred("The connection was refused by the peer (or timed out)."); break;
+    case QAbstractSocket::HostNotFoundError: emit errorOccurred("The host address was not found."); break;
+    case QAbstractSocket::NetworkError: emit errorOccurred("An error occurred with the network."); break;
+    default: emit errorOccurred("UnKnown Error.");
+        break;
+    }
+}
+
 
